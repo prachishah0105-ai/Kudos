@@ -1,0 +1,61 @@
+Kudos System Specification
+
+1. Functional Requirements
+
+User Stories
+
+Send Kudos: As a user, I can select a colleague from a list and write a message of appreciation (max 500 characters).
+
+Public Feed: As a user, I can view a feed of all recent kudos on the main dashboard.
+
+Admin Moderation: As an administrator, I can hide inappropriate kudos messages. This was added by the Architect to ensure a safe environment.
+
+Input Validation: Users cannot submit empty messages or skip selecting a recipient.
+
+Acceptance Criteria
+
+Messages have a 500-character limit.
+
+The feed shows sender, recipient, and the message content.
+
+Admins see "Hide" buttons; standard users do not.
+
+2. Technical Design
+
+Database Schema
+
+Table: Kudos
+
+id (UUID, Primary Key)
+
+sender_id (Foreign Key to Users)
+
+recipient_id (Foreign Key to Users)
+
+message (Text)
+
+created_at (Timestamp)
+
+is_visible (Boolean, Default: true) <- Added for Moderation requirement
+
+moderated_by (Foreign Key to Users, Nullable)
+
+moderated_at (Timestamp, Nullable)
+
+Component Layout
+
+KudosForm: Input for selecting colleagues and typing messages.
+
+KudosFeed: The container that displays all visible kudos.
+
+AdminControls: Special UI elements visible only to admin roles.
+
+3. Implementation Plan
+
+Initialize the React state for users and kudos.
+
+Build the submission form with validation.
+
+Create the feed display with filtering based on the is_visible flag.
+
+Implement the admin toggle functionality to moderate content.
