@@ -1,7 +1,3 @@
-To help you succeed in this task, I have consolidated everything into a single, professional SPECIFICATION.md. This document follows the exact structure required by your instructions, including the content moderation and database updates you were tasked to add.
-
-Copy the text below and save it as SPECIFICATION.md in your project folder.
-
 Kudos System Specification
 1. Functional Requirements
 User Stories
