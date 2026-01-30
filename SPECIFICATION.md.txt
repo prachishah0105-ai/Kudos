@@ -1,61 +1,84 @@
+To help you succeed in this task, I have consolidated everything into a single, professional SPECIFICATION.md. This document follows the exact structure required by your instructions, including the content moderation and database updates you were tasked to add.
+
+Copy the text below and save it as SPECIFICATION.md in your project folder.
+
 Kudos System Specification
-
 1. Functional Requirements
-
 User Stories
+As a user, I can select another user from a searchable dropdown list so that I can specify who I am praising.
 
-Send Kudos: As a user, I can select a colleague from a list and write a message of appreciation (max 500 characters).
+As a user, I can write a message of appreciation (max 500 characters) to keep the feedback concise and meaningful.
 
-Public Feed: As a user, I can view a feed of all recent kudos on the main dashboard.
+As a user, I can submit the kudos to have it stored in the database and shared with the team.
 
-Admin Moderation: As an administrator, I can hide inappropriate kudos messages. This was added by the Architect to ensure a safe environment.
+As a user, I can view a feed of recent kudos on the dashboard to see company-wide recognition.
 
-Input Validation: Users cannot submit empty messages or skip selecting a recipient.
+As an administrator, I can hide or delete inappropriate kudos messages to maintain a professional environment. (Added for moderation)
 
 Acceptance Criteria
+Users cannot send kudos to themselves.
 
-Messages have a 500-character limit.
+The public feed only displays kudos where is_visible is true.
 
-The feed shows sender, recipient, and the message content.
+Kudos messages must not be empty and cannot exceed 500 characters.
 
-Admins see "Hide" buttons; standard users do not.
+Only users with the admin role can access moderation toggles.
 
 2. Technical Design
-
 Database Schema
+Table: Users
+
+id: UUID (Primary Key)
+
+name: String
+
+email: String
+
+role: Enum ('employee', 'admin')
 
 Table: Kudos
 
-id (UUID, Primary Key)
+id: UUID (Primary Key)
 
-sender_id (Foreign Key to Users)
+sender_id: UUID (Foreign Key -> Users.id)
 
-recipient_id (Foreign Key to Users)
+recipient_id: UUID (Foreign Key -> Users.id)
 
-message (Text)
+message: Text (Max 500 chars)
 
-created_at (Timestamp)
+created_at: Timestamp
 
-is_visible (Boolean, Default: true) <- Added for Moderation requirement
+is_visible: Boolean (Default: true) — Used to hide/show in feed.
 
-moderated_by (Foreign Key to Users, Nullable)
+moderated_by: UUID (Foreign Key -> Users.id, Nullable)
 
-moderated_at (Timestamp, Nullable)
+moderated_at: Timestamp (Nullable)
 
-Component Layout
+reason_for_moderation: String (Nullable)
 
-KudosForm: Input for selecting colleagues and typing messages.
+API Endpoints
+GET /api/users: Returns a list of all colleagues for the dropdown.
 
-KudosFeed: The container that displays all visible kudos.
+GET /api/kudos: Returns a list of visible kudos for the public feed.
 
-AdminControls: Special UI elements visible only to admin roles.
+POST /api/kudos: Creates a new kudos entry (Validates sender != recipient).
+
+PATCH /api/admin/kudos/:id: Allows an admin to update is_visible and moderation notes.
+
+Frontend Components
+KudosForm: A form containing the user selection dropdown and message textarea.
+
+KudosFeed: A list component that fetches and displays recent recognition.
+
+ModerationToggle: A button visible only to admins on each feed item to flip the is_visible status.
 
 3. Implementation Plan
+Database Setup: Initialize the schema with the is_visible and moderation metadata fields.
 
-Initialize the React state for users and kudos.
+API Development: Build the endpoints for fetching users and submitting kudos.
 
-Build the submission form with validation.
+Feed Implementation: Create the dashboard feed with a filter to exclude hidden kudos.
 
-Create the feed display with filtering based on the is_visible flag.
+Admin Features: Implement the logic for administrators to flag and hide specific messages.
 
-Implement the admin toggle functionality to moderate content.
+Validation & Security: Add server-side checks for message length and user roles.
